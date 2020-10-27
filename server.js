@@ -14,5 +14,7 @@ db.once("open", () => console.log("Database connected."))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
+// Routes Link
+require("./routes/web")(app);
 
 app.listen(3000, () => console.log("Server started."))
