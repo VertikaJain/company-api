@@ -26,8 +26,8 @@ projectController = () => {
             project.save().then(() => {
                 res.status(201).json({ project })
 
-            }).catch(err => {
-                res.status(400).json({ err })
+            }).catch(error => {
+                return res.status(400).json({ error })
             })
         }
     }
