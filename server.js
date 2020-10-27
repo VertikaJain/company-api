@@ -11,6 +11,7 @@ db.on("error", error => console.error(error))
 db.once("open", () => console.log("Database connected."))
 
 // Express middlewares
+app.use(express.static(__dirname));
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 

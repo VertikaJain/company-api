@@ -8,6 +8,7 @@ const employeeModal = document.querySelector('#add-employee-modal')
 
 const saveEmployeeBtn = document.querySelector('.save-employee-btn')
 
+employees = []
 // Event listeners
 saveEmployeeBtn.addEventListener('click', addEmployee)
 
@@ -29,5 +30,33 @@ function addEmployee() {
     employees.push(employee)
     console.log(employees)
     $(employeeModal).modal('hide')
+    showEmployees(employees)
 }
 
+// display list of employees
+function showEmployees(employees) {
+    employeesTable.innerHTML = ''
+    for (let employee of employees) {
+        console.log(employee)
+        let employeeElement = document.createElement("tr")
+        employeeElement.classList.add("employee")
+
+        let employeeNameElement = document.createElement("td")
+        employeeNameElement.innerText = employee["employeeName"]
+        employeeElement.appendChild(employeeNameElement)
+
+        let employeeEmailElement = document.createElement("td")
+        employeeEmailElement.innerText = employee["employeeEmail"]
+        employeeElement.appendChild(employeeEmailElement)
+
+        let employeePhoneElement = document.createElement("td")
+        employeePhoneElement.innerText = employee["employeePhone"]
+        employeeElement.appendChild(employeePhoneElement)
+
+        let employeeProjectElement = document.createElement("td")
+        employeeProjectElement.innerText = employee["employeeProjectKey"]
+        employeeElement.appendChild(employeeProjectElement)
+
+        employeesTable.appendChild(employeeElement)
+    }
+}
