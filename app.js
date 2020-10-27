@@ -20,7 +20,6 @@ saveProjectBtn.addEventListener('click', addProject)
 
 document.onload = function () {
     loadEmployees()
-    showEmployees(employees)
     loadProjects()
 }
 
@@ -28,16 +27,54 @@ document.onload = function () {
 // Add new employee 
 function addEmployee() {
     let employee = {
-        employeeName: employeeName.value,
-        employeeEmail: employeeEmail.value,
-        employeePhone: employeePhone.value,
-        employeeProjectKey: employeeProjectKey.value
+        name: employeeName.value,
+        email: employeeEmail.value,
+        phone: employeePhone.value,
+        projectKey: employeeProjectKey.value
     }
-    employees.push(employee)
-    console.log(employees)
-    $(employeeModal).modal('hide')
-    showEmployees(employees)
+
+    let xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState === XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
+            if (xmlhttp.status === 201) {
+                $(employeeModal).modal('hide')
+                employees.push(employee)
+                showEmployees(employees)
+            }
+            else {
+                alert('There was an error saving employee');
+            }
+        }
+    };
+    xmlhttp.open("POST", "http://localhost:3000/employee", true);
+    xmlhttp.setRequestHeader('Content-Type', 'application/json');
+    xmlhttp.setRequestHeader('Accept', 'application/json');
+    xmlhttp.send(JSON.stringify(employee));
+    // xmlhttp.send(employee);
 }
+
+
+function loadEmployees() {
+    let xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState === XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
+            if (xmlhttp.status === 200) {
+                let response = JSON.parse(xmlhttp.response)
+                for (let employee of response) {
+                    employees.push(employee)
+                }
+                showEmployees(employees)
+            }
+            else {
+                alert('There was an error loading employees');
+            }
+        }
+    };
+
+    xmlhttp.open("GET", "http://localhost:3000/employee", true);
+    xmlhttp.send();
+}
+
 
 // display list of employees
 function showEmployees(employees) {
@@ -46,21 +83,20 @@ function showEmployees(employees) {
         console.log(employee)
         let employeeElement = document.createElement("tr")
         employeeElement.classList.add("employee")
-
         let employeeNameElement = document.createElement("td")
-        employeeNameElement.innerText = employee["employeeName"]
+        employeeNameElement.innerText = employee["name"]
         employeeElement.appendChild(employeeNameElement)
 
         let employeeEmailElement = document.createElement("td")
-        employeeEmailElement.innerText = employee["employeeEmail"]
+        employeeEmailElement.innerText = employee["email"]
         employeeElement.appendChild(employeeEmailElement)
 
         let employeePhoneElement = document.createElement("td")
-        employeePhoneElement.innerText = employee["employeePhone"]
+        employeePhoneElement.innerText = employee["phone"]
         employeeElement.appendChild(employeePhoneElement)
 
         let employeeProjectElement = document.createElement("td")
-        employeeProjectElement.innerText = employee["employeeProjectKey"]
+        employeeProjectElement.innerText = employee["projectKey"]
         employeeElement.appendChild(employeeProjectElement)
 
         employeesTable.appendChild(employeeElement)
