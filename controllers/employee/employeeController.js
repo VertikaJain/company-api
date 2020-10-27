@@ -9,16 +9,17 @@ employeeController = () => {
         },
         addEmployee(req, res) {
             // add employee to database
-            const { name, email, phone, project } = req.body
-            const employee = new Employees({ name, email, phone, project });
+            console.log("req.body: ", req.body);
+            const { name, email, phone, projectKey } = req.body
+            const employee = new Employees({ name, email, phone, projectKey });
             employee.employeeId = employee._id
 
             // Validation
-            if (!name || !email || !phone || !project) {
-                return res.status(400).json({ err: "All fields are required." })
+            if (!name || !email || !phone || !projectKey) {
+                return res.status(400).json({ error: "All fields are required." })
             }
             if (phone.length != 10) {
-                return res.status(400).send({ error: "Invalid phone number." })
+                return res.status(400).json({ error: "Invalid phone number." })
             }
             // Check if email id exists
             Employees.exists({ email: email }, (err, result) => {
@@ -31,8 +32,8 @@ employeeController = () => {
             employee.save().then(() => {
                 res.status(201).json({ employee })
 
-            }).catch(err => {
-                res.status(400).json({ err })
+            }).catch(error => {
+                res.status(400).json({ error })
             })
         }
     }

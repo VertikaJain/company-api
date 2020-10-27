@@ -16,9 +16,9 @@ projectController = () => {
                 return res.status(400).json({ err: "All fields are required." })
             }
             // Check if projectkey exists
-            Projects.exists({ projectKey: projectKey }, (err, result) => {
+            Projects.exists({ projectKey: projectKey }, (error, result) => {
                 if (result) {
-                    return res.status(400).send({ error: "Project Key already exists." })
+                    return res.status(400).json({ error: "Project Key already exists." })
                 }
             })
             const project = new Projects({ title, projectKey });
