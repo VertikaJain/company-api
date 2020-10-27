@@ -5,7 +5,19 @@ employeeController = () => {
         async index(req, res) {
             // return list of employees
             const employees = await Employees.find();
-            console.log("employees: ",employees);
+            res.json(employees)
+        },
+        addEmployee(req, res) {
+            // add employee to database
+            const { name, email, phone, project } = req.body
+            const employee = new Employees({ name, email, phone, project });
+            // Saving employee data to MongoDB
+            employee.save().then(() => {
+                res.json({ employee })
+
+            }).catch(err => {
+                res.json({ err })
+            })
         }
     }
 }
