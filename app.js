@@ -36,14 +36,14 @@ function addEmployee() {
     let xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState === XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
+            let response = JSON.parse(xmlhttp.response)
             if (xmlhttp.status === 201) {
                 $(employeeModal).modal('hide')
-                let response = JSON.parse(xmlhttp.response)
                 employees.push(response.employee)
                 showEmployees(employees)
             }
-            else {
-                alert('There was an error saving employee');
+            else if (xmlhttp.status === 400) {
+                alert(response.error);
             }
         }
     };
@@ -58,15 +58,15 @@ function loadEmployees() {
     let xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState === XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
+            let response = JSON.parse(xmlhttp.response)
             if (xmlhttp.status === 200) {
-                let response = JSON.parse(xmlhttp.response)
                 for (let employee of response.employees) {
                     employees.push(employee)
                 }
                 showEmployees(employees)
             }
-            else {
-                alert('There was an error loading employees');
+            else if (xmlhttp.status === 400) {
+                alert(response.error);
             }
         }
     };
@@ -112,13 +112,14 @@ function addProject() {
     let xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState === XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
+            let response = JSON.parse(xmlhttp.response)
             if (xmlhttp.status === 201) {
                 $(projectModal).modal('hide')
                 projects.push(project)
                 showProjects(projects)
             }
-            else {
-                alert('There was an error saving project');
+            else if (xmlhttp.status === 400) {
+                alert(response.error);
             }
         }
     };
@@ -134,15 +135,15 @@ function loadProjects() {
     let xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState === XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
+            let response = JSON.parse(xmlhttp.response)
             if (xmlhttp.status === 200) {
-                let response = JSON.parse(xmlhttp.response)
                 for (let project of response.projects) {
                     projects.push(project)
                 }
                 showProjects(projects)
             }
-            else {
-                alert('There was an error loading projects');
+            else if (xmlhttp.status === 400) {
+                alert(response.error);
             }
         }
     };
