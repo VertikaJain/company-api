@@ -18,7 +18,7 @@ const employees = [], projects = []
 saveEmployeeBtn.addEventListener('click', addEmployee)
 saveProjectBtn.addEventListener('click', addProject)
 
-document.onload = function () {
+window.onload = function () {
     loadEmployees()
     loadProjects()
 }
@@ -38,7 +38,8 @@ function addEmployee() {
         if (xmlhttp.readyState === XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
             if (xmlhttp.status === 201) {
                 $(employeeModal).modal('hide')
-                employees.push(employee)
+                let response = JSON.parse(xmlhttp.response)
+                employees.push(response.employee)
                 showEmployees(employees)
             }
             else {
@@ -50,7 +51,6 @@ function addEmployee() {
     xmlhttp.setRequestHeader('Content-Type', 'application/json');
     xmlhttp.setRequestHeader('Accept', 'application/json');
     xmlhttp.send(JSON.stringify(employee));
-    // xmlhttp.send(employee);
 }
 
 
@@ -60,7 +60,7 @@ function loadEmployees() {
         if (xmlhttp.readyState === XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
             if (xmlhttp.status === 200) {
                 let response = JSON.parse(xmlhttp.response)
-                for (let employee of response) {
+                for (let employee of response.employees) {
                     employees.push(employee)
                 }
                 showEmployees(employees)
@@ -80,7 +80,6 @@ function loadEmployees() {
 function showEmployees(employees) {
     employeesTable.innerHTML = ''
     for (let employee of employees) {
-        console.log(employee)
         let employeeElement = document.createElement("tr")
         employeeElement.classList.add("employee")
         let employeeNameElement = document.createElement("td")
@@ -96,7 +95,7 @@ function showEmployees(employees) {
         employeeElement.appendChild(employeePhoneElement)
 
         let employeeProjectElement = document.createElement("td")
-        employeeProjectElement.innerText = employee["projectKey"]
+        employeeProjectElement.innerText = employee["project"]
         employeeElement.appendChild(employeeProjectElement)
 
         employeesTable.appendChild(employeeElement)
@@ -137,10 +136,9 @@ function loadProjects() {
         if (xmlhttp.readyState === XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
             if (xmlhttp.status === 200) {
                 let response = JSON.parse(xmlhttp.response)
-                for (let project of response) {
+                for (let project of response.projects) {
                     projects.push(project)
                 }
-                console.log(projects)
                 showProjects(projects)
             }
             else {
@@ -156,11 +154,9 @@ function loadProjects() {
 function showProjects(projects) {
     employeeProjectKey.innerHTML = ''
     for (let project of projects) {
-        console.log(project)
         let projectKeyElement = document.createElement("option")
         projectKeyElement.innerText = project["title"]
         projectKeyElement.value = project["projectKey"]
-
         employeeProjectKey.appendChild(projectKeyElement)
     }
 }

@@ -1,19 +1,18 @@
 const Projects = require("../../models/project")
 
-
 projectController = () => {
     return {
         async index(req, res) {
             // return list of projects
             const projects = await Projects.find();
-            res.status(200).json(projects)
+            res.status(200).json({ projects })
         },
         addProject(req, res) {
             // add projects to database
             const { title, projectKey } = req.body
             // Validation
             if (!title || !projectKey) {
-                return res.status(400).json({ err: "All fields are required." })
+                return res.status(400).json({ error: "All fields are required." })
             }
             // Check if projectkey exists
             Projects.exists({ projectKey: projectKey }, (error, result) => {
